@@ -2,18 +2,18 @@ package com.pathfinding;
 
 public interface NodeInterface
 {
-    public void setX(int x);
-    public int getX();
+    void setX(int x);
+    int getX();
 
-    public void setY(int y);
-    public int getY();
+    void setY(int y);
+    int getY();
 
-    public void setWalkable(byte walkable);
-    public byte getWalkable();
+    void setWalkable(byte walkable);
+    byte getWalkable();
 
-    public void setOpened(byte opened);
-    public byte getOpened();
+    void setOpened(byte opened);
+    byte getOpened();
 
-    public void setClosed(byte closed);
-    public byte getClosed();
+    void setClosed(byte closed);
+    byte getClosed();
 }
