@@ -34,38 +34,38 @@ public class Node extends GenericNode implements Comparable {
         {
             Node n = (Node)o;
 
-            return ((n.getX() == this.getX()) && (n.getY() == this.getY()));
+            return ((n.getX() == this.x) && (n.getY() == this.y));
         }
         return false;
     }
 
-    public void setF(float f)
+    void setF(float f)
     {
         this.f = f;
     }
-    public float getF()
+    float getF()
     {
         return this.f;
     }
 
-    public void setG(float g) {
+    void setG(float g) {
         this.g = g;
     }
-    public float getG() {
+    float getG() {
         return g;
     }
 
-    public void setH(float h) {
+    void setH(float h) {
         this.h = h;
     }
-    public float getH() {
+    float getH() {
         return h;
     }
 
-    public void setParent(Node parent) {
+    void setParent(Node parent) {
         this.parent = parent;
     }
-    public Node getParent() {
+    Node getParent() {
         return parent;
     }
 }

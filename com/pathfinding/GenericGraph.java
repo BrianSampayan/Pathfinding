@@ -18,6 +18,16 @@ public class GenericGraph <T extends GenericNode> implements GraphInterface<T>
         this.populateGraph(graph);
     }
 
+    public int getWidth()
+    {
+        return this.width;
+    }
+
+    public int getHeight()
+    {
+        return this.height;
+    }
+
     public T getNode(int x, int y)
     {
         if (!this.isOutOfBounds(x, y))

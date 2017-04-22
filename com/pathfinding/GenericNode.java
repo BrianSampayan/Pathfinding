@@ -2,8 +2,8 @@ package com.pathfinding;
 
 public class GenericNode implements NodeInterface
 {
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
     private byte walkable;
     private byte opened;
     private byte closed;

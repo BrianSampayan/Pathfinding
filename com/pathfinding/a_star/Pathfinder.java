@@ -15,18 +15,13 @@ public class Pathfinder implements PathfindingInterface {
     private HeuristicInterface heuristic;
     private Path path;
     private byte[] collideUnits;
-    private int width;
-    private int height;
 
-    public Pathfinder(byte[] graph, int width, int height, byte[] collideUnits)
-    {
+    public Pathfinder(byte[] graph, int width, int height, byte[] collideUnits) {
         this(graph, width, height, collideUnits, new ManhattanHeuristic());
     }
 
     private Pathfinder(byte[] graph, int width, int height, byte[] collideUnits, HeuristicInterface heuristic)
     {
-        this.width = width;
-        this.height = height;
         this.heuristic = heuristic;
         this.graph = new GenericGraph<>(graph, Node.class, width, height);
         this.open = new PriorityQueue<>();
