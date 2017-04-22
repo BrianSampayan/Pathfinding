@@ -20,37 +20,50 @@ public class GenericGraph <T extends GenericNode> implements GraphInterface<T>
 
     public T getNode(int x, int y)
     {
-        return (T)Array.get(this.nodes, y * this.width + x);
+        if (!this.isOutOfBounds(x, y))
+        {
+            return (T)Array.get(this.nodes, y * this.width + x);
+        }
+        return null;
     }
 
     public ArrayDeque<T> getNeighbors(int x, int y)
     {
-        ArrayDeque<T> neighbors = new ArrayDeque<>();
-        for (int i = -1; i < 2; ++i)
+        if (!this.isOutOfBounds(x, y))
         {
-            for (int j = -1; j < 2; ++j)
+            ArrayDeque<T> neighbors = new ArrayDeque<>();
+            for (int i = -1; i < 2; ++i)
             {
-                if (i == 0 && j == 0)
+                for (int j = -1; j < 2; ++j)
                 {
-                    continue;
-                }
-                if (i != 0 && j != 0)
-                {
-                    continue;
-                }
-
-                int xp = i + x;
-                int yp = j + y;
-                if (!this.isOutOfBounds(xp, yp))
-                {
-                    if (this.nodes[yp * this.width + xp].getWalkable() != 0)
+                    if (i == 0 && j == 0)
                     {
-                        neighbors.push(this.nodes[yp * this.width + xp]);
+                        continue;
+                    }
+                    if (i != 0 && j != 0)
+                    {
+                        continue;
+                    }
+
+                    int xp = i + x;
+                    int yp = j + y;
+                    if (!this.isOutOfBounds(xp, yp))
+                    {
+                        if (this.nodes[yp * this.width + xp].getWalkable() != 0)
+                        {
+                            neighbors.push(this.nodes[yp * this.width + xp]);
+                        }
                     }
                 }
             }
+            return neighbors;
         }
-        return neighbors;
+        return null;
+    }
+
+    public boolean isOutOfBounds(int x, int y)
+    {
+        return ((x < 0 && x >= this.width) && (y < 0 && y >= this.height));
     }
 
     private void populateGraph(byte graph[])
@@ -64,8 +77,5 @@ public class GenericGraph <T extends GenericNode> implements GraphInterface<T>
         }
     }
 
-    private boolean isOutOfBounds(int x, int y)
-    {
-        return ((x < 0 && x >= this.width) && (y < 0 && y >= this.height));
-    }
+
 }
