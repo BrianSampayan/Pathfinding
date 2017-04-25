@@ -15,6 +15,7 @@ public class Pathfinder implements PathfindingInterface {
     private HeuristicInterface heuristic;
     private Path path;
     private byte[] collideUnits;
+    private static final boolean debugging = false;
 
     public Pathfinder(byte[] graph, int width, int height, byte[] collideUnits) {
         this(graph, width, height, collideUnits, new ManhattanHeuristic());
@@ -30,74 +31,99 @@ public class Pathfinder implements PathfindingInterface {
     }
 
     @Override
-    public Path findPath(int x, int y, int tX, int tY) {
-        open.clear();
+    public Path findPath(int x, int y, int tX, int tY, boolean breakTies) {
+        this.open.clear();
 
-        Node start = graph.getNode(x, y);
-        Node target = graph.getNode(tX, tY);
-        start.setG(0);
-        start.setF(0);
+        com.pathfinding.a_star.Node start = graph.getNode(x, y);
+        com.pathfinding.a_star.Node target = graph.getNode(tX, tY);
 
-        this.open.add(start);
-        start.setOpened((byte)1);
-        while(!this.open.isEmpty())
+        if (start != null && target != null)
         {
-            Node current = this.open.remove();
-            current.setClosed((byte)1);
-
-            if (current.equals(target))
+            if (debugging)
             {
-                break;
+                System.out.println("Starting: " + start);
+                System.out.println("Target: " + target);
             }
 
-            ArrayDeque<Node> neighbors = this.graph.getNeighbors(current.getX(), current.getY());
-            for (Node neighbor: neighbors)
+            start.setG(0);
+            start.setF(0);
+
+            this.open.add(start);
+            start.setOpened((byte)1);
+            while(!this.open.isEmpty())
             {
-                if (neighbor.getClosed() > 0)
+                com.pathfinding.a_star.Node current = this.open.remove();
+                current.setClosed((byte)1);
+                if (debugging)
                 {
-                    continue;
-                }
-                if (!this.isWalkable(neighbor.getX(), neighbor.getY()))
-                {
-                    continue;
+                    System.out.println("Current: " + current);
                 }
 
-                float ng = current.getG() + 1;
-                if (neighbor.getOpened() == 0 || ng < neighbor.getG())
+                if (current.equals(target))
                 {
-                    neighbor.setG(ng);
-                    neighbor.setH(this.heuristic.getCost(neighbor.getX(), neighbor.getY(), tX, tY));
-                    neighbor.setF(neighbor.getG() + neighbor.getH());
-                    neighbor.setParent(current);
-
-                    if (neighbor.getOpened() == 0)
+                    if (debugging)
                     {
-                        this.open.add(neighbor);
-                        neighbor.setOpened((byte)1);
+                        System.out.println("Target Hit");
+                    }
+                    break;
+                }
+
+                ArrayDeque<com.pathfinding.a_star.Node> neighbors = this.graph.getNeighbors(current.getX(), current.getY(), this.collideUnits);
+                for (com.pathfinding.a_star.Node neighbor: neighbors)
+                {
+                    if (neighbor.getClosed() > 0)
+                    {
+                        continue;
+                    }
+                    if (!this.isWalkable(neighbor.getX(), neighbor.getY()))
+                    {
+                        continue;
+                    }
+
+                    float ng = current.getG() + 1;
+                    if (neighbor.getOpened() == 0 || ng < neighbor.getG())
+                    {
+                        neighbor.setG(ng);
+                        if (breakTies)
+                        {
+                            neighbor.setH(this.heuristic.getCost(neighbor.getX(), neighbor.getY(), x, y, tX, tY));
+                        }
+                        else
+                        {
+                            neighbor.setH(this.heuristic.getCost(neighbor.getX(), neighbor.getY(), tX, tY));
+                        }
+                        neighbor.setF(neighbor.getG() + neighbor.getH());
+                        neighbor.setParent(current);
+
+                        if (neighbor.getOpened() == 0)
+                        {
+                            this.open.add(neighbor);
+                            neighbor.setOpened((byte)1);
+                        }
                     }
                 }
             }
-        }
 
-        if (target.getParent() == null)
-        {
-            return null;
-        }
+            if (target.getParent() != null)
+            {
+                com.pathfinding.a_star.Node itr = target;
+                while (!itr.equals(start))
+                {
+                    this.path.pushStep(itr.getX(), itr.getY());
+                    itr = itr.getParent();
+                }
+                this.path.pushStep(start.getX(), start.getY());
 
-        Node itr = target;
-        while (!itr.equals(start))
-        {
-            this.path.pushStep(itr.getX(), itr.getY());
-            itr = itr.getParent();
+                return this.path;
+            }
         }
-
-        return this.path;
+        return null;
     }
 
     private boolean isWalkable(int x, int y)
     {
         boolean walkable = true;
-        if (!this.graph.isOutOfBounds(x, y))
+        if (this.graph.isOutOfBounds(x, y))
         {
             Node n = this.graph.getNode(x, y);
             for (byte b : collideUnits)

@@ -6,6 +6,11 @@ public class Node extends GenericNode implements Comparable {
     private float f, g, h;
     private Node parent;
 
+    public Node()
+    {
+        super(0, 0, (byte)0);
+    }
+
     public Node(int x, int y, byte walkable)
     {
         super(x, y, walkable);
