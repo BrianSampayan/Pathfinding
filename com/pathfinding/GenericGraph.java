@@ -15,7 +15,7 @@ public class GenericGraph <T extends GenericNode> implements GraphInterface<T>
         this.width = width;
         this.height = height;
         this.nodes = (T[]) Array.newInstance(nodeClass, this.width * this.height);
-        this.populateGraph(graph);
+        this.populateGraph(graph, nodeClass);
     }
 
     public int getWidth()
@@ -30,16 +30,16 @@ public class GenericGraph <T extends GenericNode> implements GraphInterface<T>
 
     public T getNode(int x, int y)
     {
-        if (!this.isOutOfBounds(x, y))
+        if (this.isOutOfBounds(x, y))
         {
             return (T)Array.get(this.nodes, y * this.width + x);
         }
         return null;
     }
 
-    public ArrayDeque<T> getNeighbors(int x, int y)
+    public ArrayDeque<T> getNeighbors(int x, int y, byte[] collideUnites)
     {
-        if (!this.isOutOfBounds(x, y))
+        if (this.isOutOfBounds(x, y))
         {
             ArrayDeque<T> neighbors = new ArrayDeque<>();
             for (int i = -1; i < 2; ++i)
@@ -57,11 +57,17 @@ public class GenericGraph <T extends GenericNode> implements GraphInterface<T>
 
                     int xp = i + x;
                     int yp = j + y;
-                    if (!this.isOutOfBounds(xp, yp))
+                    if (this.isOutOfBounds(xp, yp))
                     {
-                        if (this.nodes[yp * this.width + xp].getWalkable() != 0)
+                        if (collideUnites != null)
                         {
-                            neighbors.push(this.nodes[yp * this.width + xp]);
+                            for (byte b : collideUnites)
+                            {
+                                if (this.nodes[yp * this.width + xp].getWalkable() != b)
+                                {
+                                    neighbors.push(this.nodes[yp * this.width + xp]);
+                                }
+                            }
                         }
                     }
                 }
@@ -73,18 +79,29 @@ public class GenericGraph <T extends GenericNode> implements GraphInterface<T>
 
     public boolean isOutOfBounds(int x, int y)
     {
-        return ((x < 0 && x >= this.width) && (y < 0 && y >= this.height));
+        return ((x >= 0 && x < this.width) && (y >= 0 && y < this.height));
     }
 
-    private void populateGraph(byte graph[])
+    private void populateGraph(byte graph[], Class<T> nodeClass)
     {
-        for (int j = 0; j < this.height; ++j)
+        try
         {
-            for (int i = 0; i < this.width; ++i)
+            for (int j = 0; j < this.height; ++j)
             {
-                Array.set(this.nodes, j * this.width + i, new GenericNode(i, j , graph[j * this.width + i]));
+                for (int i = 0; i < this.width; ++i)
+                {
+                    this.nodes[j * this.width + i] = nodeClass.newInstance();
+                    this.nodes[j * this.width + i].setX(i);
+                    this.nodes[j * this.width + i].setY(j);
+                    this.nodes[j * this.width + i].setWalkable(graph[j * this.width + i]);
+                }
             }
         }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
     }
 
 
