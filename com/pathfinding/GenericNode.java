@@ -70,4 +70,9 @@ public class GenericNode implements NodeInterface
     {
         return this.closed;
     }
+
+    public String toString()
+    {
+        return ("(" + this.x + ", " + this.y + ")");
+    }
 }
