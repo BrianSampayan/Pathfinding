@@ -24,4 +24,14 @@ public class Path {
     {
         steps.push(new Step(x, y));
     }
+
+    public String toString()
+    {
+        StringBuilder result = new StringBuilder();
+        for (Step step : steps)
+        {
+            result.append(step + "\n");
+        }
+        return result.toString();
+    }
 }

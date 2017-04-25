@@ -30,4 +30,9 @@ public class Step {
         }
         return false;
     }
+
+    public String toString()
+    {
+        return ("(" + this.x + ", " + this.y + ")");
+    }
 }
