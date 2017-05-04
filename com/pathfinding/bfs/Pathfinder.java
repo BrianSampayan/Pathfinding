@@ -22,6 +22,8 @@ public class Pathfinder implements PathfindingInterface{
 
     public Path findPath(int x, int y, int tX, int tY, boolean breakTies)
     {
+        long startTime, endTime;
+        startTime = System.nanoTime();
         this.open.clear();
 
         com.pathfinding.bfs.Node start = this.graph.getNode(x, y);
@@ -58,6 +60,8 @@ public class Pathfinder implements PathfindingInterface{
                 }
                 this.path.pushStep(start.getX(), start.getY());
 
+                endTime = System.nanoTime();
+                this.path.setCreationTime(endTime - startTime);
                 return this.path;
             }
         }
