@@ -2,28 +2,6 @@ package com.pathfinding;
 
 public final class PathAdapter
 {
-    private static volatile com.pathfinding.PathAdapter instance;
-
-    private PathAdapter()
-    {
-
-    }
-
-    public static com.pathfinding.PathAdapter getInstance()
-    {
-        if (instance == null)
-        {
-            synchronized (PathAdapter.class)
-            {
-                if (instance == null)
-                {
-                    instance = new PathAdapter();
-                }
-            }
-        }
-        return instance;
-    }
-
     public static byte[] toByteArray(byte[] initArray, int graphWidth, int graphHeight, Path path, byte pathValue)
     {
         byte[] result = initArray.clone();
