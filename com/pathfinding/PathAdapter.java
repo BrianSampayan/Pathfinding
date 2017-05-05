@@ -15,7 +15,7 @@ public final class PathAdapter
                     int index = step.getY() * graphHeight + step.getX();
                     if (isOutOfBounds(step.getX(), step.getY(), graphWidth, graphHeight))
                     {
-                        throw new ArrayIndexOutOfBoundsException("[Error:toByteArray]Index: " + index + " occurs outside the bounds of the graph.");
+                        throw new ArrayIndexOutOfBoundsException("[Error:PathAdapter:toByteArray]Index: " + index + " occurs outside the bounds of the graph.");
                     }
                     result[index] = pathValue;
                 }
@@ -40,7 +40,7 @@ public final class PathAdapter
                     int index = j * graphHeight + i;
                     if (isOutOfBounds(i, j, graphWidth, graphHeight))
                     {
-                        throw new ArrayIndexOutOfBoundsException("[Error:PrintByteArray]Index: " + index + " occurs outside the bounds of the graph.");
+                        throw new ArrayIndexOutOfBoundsException("[Error:PathAdapter:PrintByteArray]Index: " + index + " occurs outside the bounds of the graph.");
                     }
                     out.print(graph[index] + " ");
                 }
