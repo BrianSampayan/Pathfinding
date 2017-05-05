@@ -2,14 +2,14 @@ package com.pathfinding.a_star;
 
 import com.pathfinding.GenericGraph;
 import com.pathfinding.Path;
-import com.pathfinding.PathfindingInterface;
 import com.pathfinding.a_star.heuristic.HeuristicInterface;
 import com.pathfinding.a_star.heuristic.ManhattanHeuristic;
 
 import java.util.ArrayDeque;
 import java.util.PriorityQueue;
 
-public class Pathfinder implements PathfindingInterface {
+public class Pathfinder implements com.pathfinding.PathFinderInterface
+{
     private PriorityQueue<Node> open;
     private GenericGraph<Node> graph;
     private HeuristicInterface heuristic;
@@ -31,7 +31,7 @@ public class Pathfinder implements PathfindingInterface {
     }
 
     @Override
-    public Path findPath(int x, int y, int tX, int tY, boolean breakTies) {
+    public Path findPath(int x, int y, int tX, int tY) {
         long startTime, endTime;
         startTime = System.nanoTime();
         this.open.clear();
@@ -86,6 +86,7 @@ public class Pathfinder implements PathfindingInterface {
                     if (neighbor.getOpened() == 0 || ng < neighbor.getG())
                     {
                         neighbor.setG(ng);
+                        /*
                         if (breakTies)
                         {
                             neighbor.setH(this.heuristic.getCost(neighbor.getX(), neighbor.getY(), x, y, tX, tY));
@@ -94,6 +95,8 @@ public class Pathfinder implements PathfindingInterface {
                         {
                             neighbor.setH(this.heuristic.getCost(neighbor.getX(), neighbor.getY(), tX, tY));
                         }
+                        */
+                        neighbor.setH(this.heuristic.getCost(neighbor.getX(), neighbor.getY(), x, y, tX, tY));
                         neighbor.setF(neighbor.getG() + neighbor.getH());
                         neighbor.setParent(current);
 
@@ -127,7 +130,7 @@ public class Pathfinder implements PathfindingInterface {
     private boolean isWalkable(int x, int y)
     {
         boolean walkable = true;
-        if (this.graph.isOutOfBounds(x, y))
+        if (this.graph.isInBounds(x, y))
         {
             Node n = this.graph.getNode(x, y);
             for (byte b : collideUnits)

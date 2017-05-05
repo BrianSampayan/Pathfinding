@@ -1,6 +1,6 @@
 package com.pathfinding.jps;
 
-public class Pathfinder implements com.pathfinding.PathfindingInterface
+public class Pathfinder implements com.pathfinding.PathFinderInterface
 {
 
     @Override
