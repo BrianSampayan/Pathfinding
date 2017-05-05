@@ -7,6 +7,7 @@ public class GenericNode implements NodeInterface
     private byte walkable;
     private byte opened;
     private byte closed;
+    private GenericNode parent;
 
     public GenericNode()
     {
@@ -69,6 +70,27 @@ public class GenericNode implements NodeInterface
     public byte getClosed()
     {
         return this.closed;
+    }
+
+    public void setParent(GenericNode node)
+    {
+        this.parent = node;
+    }
+    public GenericNode getParent()
+    {
+        return this.parent;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o instanceof GenericNode)
+        {
+            GenericNode n = (GenericNode) o;
+
+            return ((n.getX() == this.x) && (n.getY() == this.y));
+        }
+        return false;
     }
 
     public String toString()
