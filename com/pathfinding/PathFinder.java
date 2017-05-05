@@ -8,14 +8,21 @@ public abstract class PathFinder implements PathFinderInterface
     private HashSet<Byte> collideUnits;
 
     @Override
-    public Path findPath(int x, int y, int tX, int tY, boolean breakTies)
+    public Path findPath(int x, int y, int tX, int tY)
     {
-        return null;
+        if (isReady())
+        {
+            this.graph.resetGraph();
+            search(x, y, tX, tY);
+        }
+        return constructPath(this.graph.getNode(x, y), this.graph.getNode(tX, tY));
     }
+
+    abstract void search(int sX, int sY, int tX, int tY);
+    abstract boolean isReady();
 
     public void generateGraphFromArray(byte[] array, Class<GenericNode> nodeClass, int width, int height)
     {
-
         if (width <= 0 || height <= 0 || array == null)
         {
             this.graph = null;
@@ -30,7 +37,17 @@ public abstract class PathFinder implements PathFinderInterface
             {
                 if (this.graph.getWidth() == width && this.graph.getHeight() == height)
                 {
-
+                    if (!this.graph.updateGraph(array, nodeClass))
+                    {
+                        this.graph = null;
+                    }
+                }
+                else
+                {
+                    if (!this.graph.updateGraph(array, nodeClass, width, height))
+                    {
+                        this.graph = null;
+                    }
                 }
             }
         }
@@ -61,5 +78,22 @@ public abstract class PathFinder implements PathFinderInterface
             walkable = false;
         }
         return walkable;
+    }
+
+    private Path constructPath(GenericNode start, GenericNode target)
+    {
+        Path path = null;
+        if (target.getParent() != null)
+        {
+            path = new Path();
+            GenericNode itr = target;
+            while (!itr.equals(start))
+            {
+                path.pushStep(itr.getX(), itr.getY());
+                itr = itr.getParent();
+            }
+            path.pushStep(start.getX(), start.getY());
+        }
+        return path;
     }
 }
